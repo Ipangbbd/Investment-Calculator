@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="calculator-container">
+        <div class="input-panel">
+            <h1>Investment Calculator</h1>
+
+            <div class="input-section">
+                <label>Currency:</label>
+                <div class="currency-selector">
+                    <div class="currency-option">
+                        <button class="currency-btn active" data-currency="$">$</button>
+                    </div>
+                    <div class="currency-option">
+                        <button class="currency-btn" data-currency="€">€</button>
+                    </div>
+                    <div class="currency-option">
+                        <button class="currency-btn" data-currency="£">£</button>
+                    </div>
+                    <div class="currency-option">
+                        <button class="currency-btn" data-currency="₹">₹</button>
+                    </div>
+                    <div class="currency-option">
+                        <button class="currency-btn" data-currency="¥">¥</button>
+                    </div>
+                </div>
+
+                <label>Initial investment:</label>
+                <div class="input-group">
+                    <span id="currency-symbol">$</span>
+                    <input type="number" id="initial-investment" placeholder="0" min="0" step="1">
+                </div>
+
+                <label>Interest rate:</label>
+                <div class="input-group">
+                    <input type="number" id="interest-rate" placeholder="0" min="0" step="0.01">
+                    <span>%</span>
+                    <select id="compound-frequency">
+                        <option value="yearly">yearly</option>
+                        <option value="monthly">monthly</option>
+                        <option value="quarterly">quarterly</option>
+                        <option value="daily">daily</option>
+                    </select>
+                </div>
+
+                <div class="time-inputs">
+                    <div class="time-input">
+                        <label>Years:</label>
+                        <input type="number" id="years" placeholder="1" min="0" step="1" value="1">
+                    </div>
+                    <div class="time-input">
+                        <label>Months:</label>
+                        <input type="number" id="months" placeholder="0" min="0" max="11" step="1" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <label>Additional contributions: (optional)</label>
+                <div class="additional-options">
+                    <div class="additional-option">
+                        <button class="additional-btn active" data-contribution="none">None</button>
+                    </div>
+                    <div class="additional-option">
+                        <button class="additional-btn" data-contribution="deposits">Deposits</button>
+                    </div>
+                    <div class="additional-option">
+                        <button class="additional-btn" data-contribution="withdrawals">Withdrawals</button>
+                    </div>
+                    <div class="additional-option">
+                        <button class="additional-btn" data-contribution="both">Both</button>
+                    </div>
+                </div>
+
+                <div id="deposit-section" class="hidden">
+                    <label>Deposit amount: (optional)</label>
+                    <div class="input-group">
+                        <span id="currency-symbol-deposit">$</span>
+                        <input type="number" id="deposit-amount" placeholder="0" min="0" step="1" value="250">
+                        <select id="deposit-frequency">
+                            <option value="monthly">monthly</option>
+                            <option value="quarterly">quarterly</option>
+                            <option value="yearly">yearly</option>
+                        </select>
+                    </div>
+
+                    <label>Deposits made at what point in period?</label>
+                    <div class="deposit-timing">
+                        <button class="deposit-timing-btn" data-timing="beginning">Beginning</button>
+                        <button class="deposit-timing-btn active" data-timing="end">End</button>
+                    </div>
+
+                    <label>Annual deposit % increase? (optional)</label>
+                    <div class="input-group">
+                        <input type="number" id="deposit-increase" placeholder="0" min="0" step="0.1">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div id="withdrawal-section" class="hidden">
+                    <label>Withdrawal amount: (optional)</label>
+                    <div class="input-group">
+                        <span id="currency-symbol-withdrawal">$</span>
+                        <input type="number" id="withdrawal-amount" placeholder="0" min="0" step="1">
+                        <select id="withdrawal-frequency">
+                            <option value="monthly">monthly</option>
+                            <option value="quarterly">quarterly</option>
+                            <option value="yearly">yearly</option>
+                        </select>
+                    </div>
+
+                    <label>Withdrawals made at what point in period?</label>
+                    <div class="withdrawal-timing">
+                        <button class="deposit-timing-btn" data-timing="beginning">Beginning</button>
+                        <button class="deposit-timing-btn active" data-timing="end">End</button>
+                    </div>
+
+                    <label>Annual withdrawal % increase? (optional)</label>
+                    <div class="input-group">
+                        <input type="number" id="withdrawal-increase" placeholder="0" min="0" step="0.1">
+                        <span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <label>Compound interval:</label>
+                <div class="input-group">
+                    <select id="compound-interval">
+                        <option value="monthly">Monthly (12/yr)</option>
+                        <option value="quarterly">Quarterly (4/yr)</option>
+                        <option value="yearly">Yearly (1/yr)</option>
+                        <option value="daily">Daily (365/yr)</option>
+                    </select>
+                </div>
+
+                <button id="calculate-btn" class="calculate-btn">Calculate</button>
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <h2 class="result-header">Projection for <span id="projection-years">1</span> year</h2>
+
+            <div class="result-item">
+                <span class="result-label">Future investment value</span>
+                <div class="result-value future-value" id="future-value">$0.00</div>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Total interest earned</span>
+                <div class="result-value interest-earned" id="interest-earned">$0.00</div>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Initial balance</span>
+                <div class="result-value initial-balance" id="initial-balance">$0.00</div>
+            </div>
+
+            <div class="breakdown-options">
+                <div class="breakdown-toggle">
+                    <button class="breakdown-toggle-btn active" data-breakdown="monthly">monthly</button>
+                    <button class="breakdown-toggle-btn" data-breakdown="yearly">yearly</button>
+                </div>
+
+                <div class="view-toggle">
+                    <button class="view-toggle-btn active" data-view="table">
+                        <span>Table</span>
+                    </button>
+                </div>
+            </div>
+
+            <h3>Monthly breakdown</h3>
+<div id="breakdown-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Interest</th>
+                <th>Accrued Interest</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody id="breakdown-tbody">
+            <tr>
+                <td>0</td>
+                <td>-</td>
+                <td>-</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
